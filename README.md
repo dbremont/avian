@@ -575,6 +575,7 @@ TBD
 1. Remove Windows, MacOS, FreeBSD dependencies.
 2. Remove travis ci files
 3. Remove android dependency
+4. Change the implementation to C
 
 Trademarks
 ----------
