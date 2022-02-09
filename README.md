@@ -1,9 +1,6 @@
 Avian - A lightweight Java Virtual Machine (JVM)
 ================================================
 
-**PLEASE NOTE: This project is not currently being developed, maintained, or supported.  Feel free to use and/or fork it, but any issues filed here will probably be ignored.**
-
-[![Build Status](https://travis-ci.org/ReadyTalk/avian.png?branch=master)](https://travis-ci.org/ReadyTalk/avian)
 
 Quick Start
 -----------
@@ -17,22 +14,6 @@ to use forward slashes in the path.
     $ export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
     $ make
     $ build/linux-x86_64/avian -cp build/linux-x86_64/test Hello
-
-#### on Mac OS X:
-    $ export JAVA_HOME=$(/usr/libexec/java_home)
-    $ make
-    $ build/macosx-x86_64/avian -cp build/macosx-x86_64/test Hello
-
-#### on Windows (Cygwin):
-    $ git clone git@github.com:ReadyTalk/win64.git ../win64
-    $ export JAVA_HOME="/cygdrive/c/Program Files/Java/jdk1.7.0_45"
-    $ make
-    $ build/windows-x86_64/avian -cp build/windows-x86_64/test Hello
-
-#### on FreeBSD:
-    $ export JAVA_HOME=/usr/local/openjdk7
-    $ gmake
-    $ build/freebsd-x86_64/avian -cp build/freebsd-x86_64/test Hello
 
 
 Introduction
@@ -49,10 +30,6 @@ Supported Platforms
 Avian can currently target the following platforms:
 
   * Linux (i386, x86_64, ARM, and ARM64)
-  * Windows (i386 and x86_64)
-  * Mac OS X (i386 and x86_64)
-  * Apple iOS (i386, x86_64, ARM, and ARM64)
-  * FreeBSD (i386, x86_64)
 
 
 Building
@@ -64,7 +41,6 @@ Build requirements include:
   * GCC 4.6 or later
       or LLVM Clang 3.1 or later (see use-clang option below)
   * JDK 1.6 or later
-  * MinGW 3.4 or later (only if compiling for Windows)
   * zlib 1.2.3 or later
 
 Earlier versions of some of these packages may also work but have not
@@ -178,115 +154,6 @@ example of an Xcode project for iOS which uses Avian.
 If you are compiling for Windows, you may either cross-compile using
 MinGW or build natively on Windows under Cygwin.
 
-#### Installing Cygwin:
-
-  __1.__ Download and run setup.exe from [cygwin's website](http://www.cygwin.com), installing the base
-  system and these packages: make, gcc-mingw-g++,
-  mingw64-i686-gcc-g++, mingw64-x86_64-gcc-g++, and (optionally) git.
-
-You may also find our win32 repository useful: (run this from the
-directory containing the avian directory)
-
-    $ git clone git@github.com:ReadyTalk/win32.git
-
-This gives you the Windows JNI headers, zlib headers and library, and
-a few other useful libraries like OpenSSL, libjpeg, and libpng.
-There's also a win64 repository for 64-bit builds:
-
-      $ git clone git@github.com:ReadyTalk/win64.git
-
-
-Building with the Microsoft Visual C++ Compiler
------------------------------------------------
-
-You can also build using the MSVC compiler, which makes debugging with
-tools like WinDbg and Visual Studio much easier.  Note that you will
-still need to have GCC installed - MSVC is only used to compile the
-C++ portions of the VM, while the assembly code and helper tools are
-built using GCC.
-
-*Note that the MSVC build isn't tested regularly, so is fairly likely to be broken.*
-
-Avian targets MSVC 11 and above (it uses c++ features not available in older versions).
-
-To build with MSVC, install Cygwin as described above and set the
-following environment variables:
-
-    $ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/X11R6/bin:/cygdrive/c/Program Files/Microsoft Visual Studio 11.0/Common7/IDE:/cygdrive/c/Program Files/Microsoft Visual Studio 11.0/VC/BIN:/cygdrive/c/Program Files/Microsoft Visual Studio 11.0/Common7/Tools:/cygdrive/c/WINDOWS/Microsoft.NET/Framework/v3.5:/cygdrive/c/WINDOWS/Microsoft.NET/Framework/v2.0.50727:/cygdrive/c/Program Files/Microsoft Visual Studio 11.0/VC/VCPackages:/cygdrive/c/Program Files/Microsoft SDKs/Windows/v6.0A/bin:/cygdrive/c/WINDOWS/system32:/cygdrive/c/WINDOWS:/cygdrive/c/WINDOWS/System32/Wbem"
-    $ export LIBPATH="C:\WINDOWS\Microsoft.NET\Framework\v3.5;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Microsoft Visual Studio 11.0\VC\LIB;"
-    $ export VCINSTALLDIR="C:\Program Files\Microsoft Visual Studio 11.0\VC"
-    $ export LIB="C:\Program Files\Microsoft Visual Studio 11.0\VC\LIB;C:\Program Files\Microsoft SDKs\Windows\v6.0A\lib;"
-    $ export INCLUDE="C:\Program Files\Microsoft Visual Studio 11.0\VC\INCLUDE;C:\Program Files\Microsoft SDKs\Windows\v6.0A\include;"
-
-Adjust these definitions as necessary according to your MSVC
-installation.
-
-Finally, build with the msvc flag set to the MSVC tool directory:
-
-    $ make msvc="/cygdrive/c/Program Files/Microsoft Visual Studio 11.0/VC"
-
-
-Building with the OpenJDK Class Library
----------------------------------------
-
-By default, Avian uses its own lightweight class library.  However,
-that library only contains a relatively small subset of the classes
-and methods included in the JRE.  If your application requires
-features beyond that subset, you may want to tell Avian to use
-OpenJDK's class library instead.  To do so, specify the directory
-where OpenJDK is installed, e.g.:
-
-    $ make openjdk=/usr/lib/jvm/java-7-openjdk
-
-This will build Avian as a conventional JVM (e.g. libjvm.so) which
-loads its boot class library and native libraries (e.g. libjava.so)
-from _/usr/lib/jvm/java-7-openjdk/jre_ at runtime.  Note that you must
-use an absolute path here, or else the result will not work when run
-from other directories.  In this configuration, OpenJDK needs to
-remain installed for Avian to work, and you can run applications like
-this:
-
-    $ build/linux-x86_64-openjdk/avian-dynamic -cp /path/to/my/application \
-        com.example.MyApplication
-
-Alternatively, you can enable a stand-alone build using OpenJDK by
-specifying the location of the OpenJDK source code, e.g.:
-
-    $ make openjdk=$(pwd)/../jdk7/build/linux-amd64/j2sdk-image \
-        openjdk-src=$(pwd)/../jdk7/jdk/src
-
-You must ensure that the path specified for openjdk-src does not have
-any spaces in it; make gets confused when dependency paths include
-spaces, and we haven't found away around that except to avoid paths
-with spaces entirely.
-
-The result of such a build is a self-contained binary which does not
-depend on external libraries, jars, or other files.  In this case, the
-specified paths are used only at build time; anything needed at
-runtime is embedded in the binary.  Thus, the process of running an
-application is simplified:
-
-    $ build/linux-x86_64-openjdk-src/avian -cp /path/to/my/application \
-        com.example.MyApplication
-
-Note that the resulting binary will be very large due to the size of
-OpenJDK's class library.  This can be mitigated using UPX, preferably
-an LZMA-enabled version:
-
-    $ upx --lzma --best build/linux-x86_64-openjdk-src/avian
-
-You can reduce the size futher for embedded builds by using ProGuard
-and the supplied openjdk.pro configuration file (see "Embedding with
-ProGuard and a Boot Image" below).  Note that you'll still need to use
-vm.pro in that case -- openjdk.pro just adds additional constraints
-specific to the OpenJDK port.  Also see
-[app.mk](https://github.com/ReadyTalk/avian-swt-examples/blob/master/app.mk)
-in the _avian-swt-examples_ project for an example of using Avian,
-OpenJDK, ProGuard, and UPX in concert.
-
-Here are some examples of how to install OpenJDK and build Avian with
-it on various OSes:
-
 #### Debian-based Linux:
 _Conventional build:_
 
@@ -303,32 +170,6 @@ _Stand-alone build:_
         openjdk-src=$(pwd)/openjdk-7-7~b147-2.0/build/openjdk/jdk/src \
         test
 
-#### Mac OS X:
-_Prerequisite:_ Build OpenJDK 7 according to [this site](https://wikis.oracle.com/display/OpenJDK/Mac+OS+X+Port).
-
-_Conventional build:_
-
-    $ make openjdk=$(pwd)/../jdk7u-dev/build/macosx-amd64/j2sdk-image test
-
-_Stand-alone build:_
-
-    $ make openjdk=$(pwd)/../jdk7u-dev/build/macosx-amd64/j2sdk-image \
-        openjdk-src=$(pwd)/../p/jdk7u-dev/jdk/src test
-
-#### Windows (Cygwin):
-_Prerequisite:_ Build OpenJDK 7 according to [this site](http://weblogs.java.net/blog/simonis/archive/2011/10/28/yaojowbi-yet-another-openjdk-windows-build-instruction).  Alternatively, use https://github.com/alexkasko/openjdk-unofficial-builds.
-
-_Conventional build:_
-
-    $ make openjdk=$(pwd)/../jdk7u-dev/build/windows-i586/j2sdk-image test
-
-_Stand-alone build:_
-
-    $ make openjdk=$(pwd)/../jdk7u-dev/build/windows-i586/j2sdk-image \
-        openjdk-src=$(pwd)/../p/jdk7u-dev/jdk/src test
-
-Currently, only OpenJDK 7 is supported.  Later versions might work,
-but have not yet been tested.
 
 
 Building with the Android Class Library
@@ -514,19 +355,6 @@ __on Linux:__
 
     $ g++ -rdynamic *.o -ldl -lpthread -lz -o hello
     $ strip --strip-all hello
-
-__on Mac OS X:__
-
-    $ g++ -rdynamic *.o -ldl -lpthread -lz -o hello -framework CoreFoundation
-    $ strip -S -x hello
-
-__on Windows:__
-
-    $ dlltool -z hello.def *.o
-    $ dlltool -d hello.def -e hello.exp
-    $ gcc hello.exp *.o -L../../win32/lib -lmingwthrd -lm -lz -lws2_32 \
-        -lIphlpapi -mwindows -mconsole -o hello.exe
-    $ strip --strip-all hello.exe
 
 Embedding with ProGuard and a Boot Image
 ----------------------------------------
@@ -742,6 +570,11 @@ __8.__ Link the objects produced above to produce the final
     $ g++ -rdynamic *.o -ldl -lpthread -lz -o hello
     $ strip --strip-all hello
 
+TBD
+----------
+1. Remove Windows, MacOS, FreeBSD dependencies.
+2. Remove travis ci files
+3. Remove android dependency
 
 Trademarks
 ----------
