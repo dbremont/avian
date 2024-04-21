@@ -25,11 +25,11 @@ namespace {
 #define IMAGE_FILE_LINE_NUMS_STRIPPED \
   0x0004                                 // Line nunbers stripped from file.
 #define IMAGE_FILE_MACHINE_AMD64 0x8664  // AMD64 (K8)
-#define IMAGE_FILE_MACHINE_I386 0x014c   // Intel 386.
-#define IMAGE_FILE_MACHINE_ARM 0x01c0    // ARM Little-Endian
-#define IMAGE_FILE_MACHINE_THUMB 0x01c2  // ARM Thumb/Thumb-2 Little-Endian
-#define IMAGE_FILE_MACHINE_ARMNT 0x01c4  // ARM Thumb-2 Little-Endian
-#define IMAGE_FILE_32BIT_MACHINE 0x0100  // 32 bit word machine.
+// #define IMAGE_FILE_MACHINE_I386 0x014c   // Intel 386.
+// #define IMAGE_FILE_MACHINE_ARM 0x01c0    // ARM Little-Endian
+// #define IMAGE_FILE_MACHINE_THUMB 0x01c2  // ARM Thumb/Thumb-2 Little-Endian
+// #define IMAGE_FILE_MACHINE_ARMNT 0x01c4  // ARM Thumb-2 Little-Endian
+// #define IMAGE_FILE_32BIT_MACHINE 0x0100  // 32 bit word machine.
 
 #define IMAGE_SCN_ALIGN_1BYTES 0x100000
 #define IMAGE_SCN_ALIGN_2BYTES 0x200000
@@ -221,12 +221,9 @@ class WindowsPlatform : public Platform {
     if (Architecture == PlatformInfo::x86_64) {
       machine = IMAGE_FILE_MACHINE_AMD64;
       machineMask = 0;
-    } else if (Architecture == PlatformInfo::x86) {
-      machine = IMAGE_FILE_MACHINE_I386;
-      machineMask = IMAGE_FILE_32BIT_MACHINE;
-    } else if (Architecture == PlatformInfo::Arm) {
-      machine = IMAGE_FILE_MACHINE_ARMNT;
-      machineMask = IMAGE_FILE_32BIT_MACHINE;
+    } else {
+      //:TODO Print Message
+      // ..
     }
 
     int sectionMask;

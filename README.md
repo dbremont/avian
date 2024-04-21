@@ -10,11 +10,15 @@ the x86_64 architecture.  You may need to modify JAVA_HOME according
 to where the JDK is installed on your system.  In all cases, be sure
 to use forward slashes in the path.
 
-#### on Linux:
-    $ export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
-    $ make
-    $ build/linux-x86_64/avian -cp build/linux-x86_64/test Hello
+## Build
 
+```bash
+sdk use java 7.0.352-zulu
+make
+```
+
+Test:
+`build/linux-x86_64-debug/avian -cp  build/linux-x86_64-debug/test Hello`
 
 Introduction
 ------------
@@ -55,14 +59,11 @@ certain flags described below, all of which are optional.
         process={compile,interpret} \
         mode={debug,debug-fast,fast,small} \
         lzma=<lzma source directory> \
-        bootimage={true,false} \
         tails={true,false} \
         continuations={true,false} \
         use-clang={true,false} \
         openjdk=<openjdk installation directory> \
-        openjdk-src=<openjdk source directory> \
-        android=<android source directory> \
-        ios-version=<iOS minimum version>
+        openjdk-src=<openjdk source directory>
 
   * `platform` - the target platform
     * _default:_ output of $(uname -s | tr [:upper:] [:lower:]),
@@ -86,16 +87,6 @@ containing a recent LZMA SDK (available [here](http://www.7-zip.org/sdk.html)). 
 the SDK has been tested, but other versions might work.
     * _default:_ not set
 
-  * `armv6` - if true, don't use any instructions newer than armv6.  By
-default, we assume the target is armv7 or later, and thus requires explicit
-memory barrier instructions to ensure cache coherency
-
-  * `bootimage` - if true, create a boot image containing the pre-parsed
-class library and ahead-of-time compiled methods.  This option is
-only valid for process=compile builds.  Note that you may need to
-specify both build-arch=x86_64 and arch=x86_64 on 64-bit systems
-where "uname -m" prints "i386".
-    * _default:_ false
 
   * `tails` - if true, optimize each tail call by replacing the caller's
 stack frame with the callee's.  This convention ensures proper
@@ -125,77 +116,6 @@ components of the OpenJDK class library will be built from the
 sources found under the specified directory.  See "Building with
 the OpenJDK Class Library" below for details.
     * _default:_ not set
-
-  * `android` - if set, use the Android class library instead of the
-default Avian class library.  See "Building with the Android Class
-Library" below for details.
-    * _default:_ not set
-
-  * `ios-version` - the minimum iOS SDK version which will be used
-when compiling for ios target. Do not use a value 11.0 or larger,
-if you want to support 32 bit version. This option is only valid
-for platform=ios .
-    * _default:_ 8.0
-
-These flags determine the name of the directory used for the build.
-The name always starts with _${platform}-${arch}_, and each non-default
-build option is appended to the name.  For example, a debug build with
-bootimage enabled on Linux/x86_64 would be built in
-_build/linux-x86_64-debug-bootimage_.  This allows you to build with
-several different sets of options independently and even
-simultaneously without doing a clean build each time.
-
-Note that not all combinations of these flags are valid.  For instance,
-non-jailbroken iOS devices do not allow JIT compilation, so only
-process=interpret or bootimage=true builds will run on such
-devices.  See [here](https://github.com/ReadyTalk/hello-ios) for an
-example of an Xcode project for iOS which uses Avian.
-
-If you are compiling for Windows, you may either cross-compile using
-MinGW or build natively on Windows under Cygwin.
-
-#### Debian-based Linux:
-_Conventional build:_
-
-    $ apt-get install openjdk-7-jdk
-    $ make openjdk=/usr/lib/jvm/java-7-openjdk test
-
-_Stand-alone build:_
-
-    $ apt-get install openjdk-7-jdk
-    $ apt-get source openjdk-7-jdk
-    $ apt-get build-dep openjdk-7-jdk
-    $ (cd openjdk-7-7~b147-2.0 && dpkg-buildpackage)
-    $ make openjdk=/usr/lib/jvm/java-7-openjdk \
-        openjdk-src=$(pwd)/openjdk-7-7~b147-2.0/build/openjdk/jdk/src \
-        test
-
-
-
-Building with the Android Class Library
----------------------------------------
-As an alternative to both the Avian and OpenJDK class libaries, you
-can also build with the Android class library. Now it should work on Linux, OS X and Windows.
-
-The simpliest way to build Avian with Android classpath is to use `avian-pack` project: https://github.com/bigfatbrowncat/avian-pack
-
-Avian-pack consists of Avian itself with some Android components (such as libcore and icu4c).
-
-Note that we use the upstream OpenSSL repository and apply the
-Android patches to it.  This is because it is not clear how to build
-the Android fork of OpenSSL directly without checking out and building
-the entire platform.  As of this writing, the patches apply cleanly
-against OpenSSL 1.0.1h, so that's the tag we check out, but this may
-change in the future when the Android fork rebases against a new
-OpenSSL version.
-
-Installing
-----------
-
-Installing Avian is as simple as copying the executable to the desired
-directory:
-
-    $ cp build/${platform}-${arch}/avian ~/bin/
 
 
 Embedding

@@ -390,18 +390,9 @@ class MyClasspath : public Classpath {
 
     unsigned libraryPathOffset = sb.offset;
     sb.append(javaHome);
-#ifdef PLATFORM_WINDOWS
-#define LIB_DIR "/bin"
-#elif defined __APPLE__
-#define LIB_DIR "/lib"
-#elif defined ARCH_x86_64
+
 #define LIB_DIR "/lib/amd64"
-#elif defined ARCH_arm
-#define LIB_DIR "/lib/arm"
-#else
-// todo: handle other architectures
-#define LIB_DIR "/lib/i386"
-#endif
+
 
 #ifdef PLATFORM_WINDOWS
     sb.append(LIB_DIR);

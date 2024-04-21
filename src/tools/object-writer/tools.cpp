@@ -109,14 +109,8 @@ PlatformInfo::Format PlatformInfo::formatFromString(const char* format)
 
 PlatformInfo::Architecture PlatformInfo::archFromString(const char* arch)
 {
-  if (strcmp(arch, "i386") == 0) {
-    return Architecture::x86;
-  } else if (strcmp(arch, "x86_64") == 0) {
+ if (strcmp(arch, "x86_64") == 0) {
     return Architecture::x86_64;
-  } else if (strcmp(arch, "arm") == 0) {
-    return Architecture::Arm;
-  } else if (strcmp(arch, "arm64") == 0) {
-    return Architecture::Arm64;
   } else {
     return Architecture::UnknownArch;
   }

@@ -66,14 +66,8 @@ typedef unsigned __int64 uint64_t;
 #include "stdint.h"
 #include "errno.h"
 
-#ifdef __i386__
-#define ARCH_x86_32
-#elif defined __x86_64__
+#ifdef __x86_64__
 #define ARCH_x86_64
-#elif defined __arm__
-#define ARCH_arm
-#elif defined __aarch64__
-#define ARCH_arm64
 #endif
 
 #endif  // not _MSC_VER

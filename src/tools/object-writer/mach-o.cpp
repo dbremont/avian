@@ -30,15 +30,15 @@
 
 #define CPU_ARCH_ABI64 0x01000000
 
-#define CPU_TYPE_I386 7
-#define CPU_TYPE_X86_64 (CPU_TYPE_I386 | CPU_ARCH_ABI64)
-#define CPU_TYPE_ARM 12
-#define CPU_TYPE_ARM64 (CPU_TYPE_ARM | CPU_ARCH_ABI64)
+// #define CPU_TYPE_I386 7
+#define CPU_TYPE_X86_64 (CPU_ARCH_ABI64)
+// #define CPU_TYPE_ARM 12
+// #define CPU_TYPE_ARM64 (CPU_TYPE_ARM | CPU_ARCH_ABI64)
 
-#define CPU_SUBTYPE_I386_ALL 3
-#define CPU_SUBTYPE_X86_64_ALL CPU_SUBTYPE_I386_ALL
-#define CPU_SUBTYPE_ARM_V7 9
-#define CPU_SUBTYPE_ARM_V8 13
+// #define CPU_SUBTYPE_I386_ALL 3
+#define CPU_SUBTYPE_X86_64_ALL 3
+// #define CPU_SUBTYPE_ARM_V7 9
+// #define CPU_SUBTYPE_ARM_V8 13
 
 namespace {
 
@@ -151,18 +151,18 @@ class MachOPlatform : public Platform {
       cpuType = CPU_TYPE_X86_64;
       cpuSubType = CPU_SUBTYPE_X86_64_ALL;
       break;
-    case PlatformInfo::x86:
-      cpuType = CPU_TYPE_I386;
-      cpuSubType = CPU_SUBTYPE_I386_ALL;
-      break;
-    case PlatformInfo::Arm:
-      cpuType = CPU_TYPE_ARM;
-      cpuSubType = CPU_SUBTYPE_ARM_V7;
-      break;
-    case PlatformInfo::Arm64:
-      cpuType = CPU_TYPE_ARM64;
-      cpuSubType = CPU_SUBTYPE_ARM_V8;
-      break;
+    // case PlatformInfo::x86:
+    //   cpuType = CPU_TYPE_I386;
+    //   cpuSubType = CPU_SUBTYPE_I386_ALL;
+    //   break;
+    // case PlatformInfo::Arm:
+    //   cpuType = CPU_TYPE_ARM;
+    //   cpuSubType = CPU_SUBTYPE_ARM_V7;
+    //   break;
+    // case PlatformInfo::Arm64:
+    //   cpuType = CPU_TYPE_ARM64;
+    //   cpuSubType = CPU_SUBTYPE_ARM_V8;
+    //   break;
     default:
       // should never happen (see MachOPlatform declarations at bottom)
       fprintf(stderr, "unsupported architecture: %d\n", info.arch);
